@@ -1,5 +1,5 @@
 # scalable_ml_pipelines
-Advanced DB ITMO University Project Work
+Advanced BD ITMO University Project Work
 
 A system that trains a machine learning model and serves incoming request making predictions for them using the trained model.
 
