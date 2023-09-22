@@ -29,3 +29,8 @@ Notes:
 5.                 Take a look on ‘kubectl rollout restart’ command to make redeployment without downtime.
 
 
+Setup
+
+0. git clone https://github.com/etietopabraham/scalable_ml_pipelines.git
+1. conda create --name us_used_cars_ml_pipeline_env python=3.8 -y
+2. conda activate us_used_cars_ml_pipeline_env
