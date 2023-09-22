@@ -1,0 +1,46 @@
+# Core Packages
+pyspark
+mlflow==2.2.2
+
+# Kafka integration
+kafka-python
+
+# Data Processing and ML
+numpy
+pandas
+scikit-learn
+
+# ETL tasks and other utilities
+pyYAML
+python-box[all]~=7.0
+ensure==1.0.2
+tqdm
+types-PyYAML
+
+# Web Framework for API
+Flask
+Flask-Cors
+
+# Kubernetes Python Client (useful for interacting with Kubernetes API)
+kubernetes
+
+# Database connector (if storing results in a database or fetching configurations)
+sqlalchemy
+
+# For model serialization and deserialization
+joblib
+
+# If using cloud providers (like AWS S3 for storage)
+boto3
+
+# For visualization tasks
+matplotlib
+seaborn
+
+# Notebook for research and exploration
+jupyter
+
+# For unit testing
+pytest
+
+-e .

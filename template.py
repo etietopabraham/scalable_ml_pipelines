@@ -56,7 +56,8 @@ list_of_files.extend([
     "main.py",
     "app.py",
     "setup.py",
-    ".gitignore"
+    ".gitignore",
+    "requirements.txt"
 ])
 
 # Kubernetes & Infrastructure: Configuration files and scripts related to Kubernetes deployments and management.
