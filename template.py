@@ -46,6 +46,9 @@ list_of_files.extend([
     f"src/{project_name}/entity/__init__.py",
     f"src/{project_name}/entity/config_entity.py",
     f"src/{project_name}/constants/__init__.py",
+    f"src/{project_name}/utils/__init__.py",
+    f"src/{project_name}/utils/common.py",
+    f"src/{project_name}/tests/__init__.py"
     
     # Configuration files at the root level
     "config/config.yaml",
@@ -104,11 +107,11 @@ list_of_files.extend([
 # ])
 
 # Miscellaneous: Contains utility scripts and unit tests for the application.
-list_of_files.extend([
-    "utils/__init__.py",
-    "utils/common.py",
-    "tests/__init__.py"
-])
+# list_of_files.extend([
+#     "utils/__init__.py",
+#     "utils/common.py",
+#     "tests/__init__.py"
+# ])
 
 # Research: Contains notebooks and other scripts for exploratory work.
 list_of_files.extend([
