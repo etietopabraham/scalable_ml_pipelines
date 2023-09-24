@@ -43,4 +43,7 @@ jupyter
 # For unit testing
 pytest
 
+#HDFS
+hdfs
+
 -e .

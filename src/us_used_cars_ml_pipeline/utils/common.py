@@ -19,6 +19,9 @@ from typing import Union
 
 from us_used_cars_ml_pipeline import logger
 
+from pyspark.sql import SparkSession
+from hdfs import InsecureClient
+
 
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
@@ -190,3 +193,43 @@ def get_size(path: Path) -> str:
     except OSError as e:
         logger.error(f"Failed to get size for {path}. Error: {e}")
         raise
+
+@ensure_annotations
+def get_spark_session(app_name="us_used_cars_app"):
+    """
+    Singleton pattern to ensure only one SparkSession instance.
+    """
+    return SparkSession.builder.appName(app_name).getOrCreate()
+
+
+@ensure_annotations
+def create_hdfs_directory(directory_path, hdfs_url, hdfs_user):
+    """
+    Create a directory in HDFS.
+
+    Args:
+    - directory_path (str): The path of the directory to be created in HDFS.
+    - hdfs_url (str): The URL of the HDFS instance.
+    - hdfs_user (str): The HDFS user.
+
+    Returns:
+    None
+    """
+    client = InsecureClient(hdfs_url, user=hdfs_user)
+    if not client.status(directory_path, strict=False):
+        client.makedirs(directory_path)
+
+
+
+@ensure_annotations
+def read_data_from_hdfs(spark: SparkSession, hdfs_path: str):
+    """
+    Reads the data from HDFS and returns it as a DataFrame.
+    """
+    try:
+        df = spark.read.csv(hdfs_path, header=True, inferSchema=True)
+        df.show()
+        return df
+    except Exception as e:
+        logger.error(f"Failed to read data from HDFS. Error: {e}")
+        raise e

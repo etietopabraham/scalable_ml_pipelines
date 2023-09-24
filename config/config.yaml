@@ -1,0 +1,7 @@
+#Data Ingestion Configuration
+artifacts_root: hdfs:///geekradius/used_cars_project/
+
+data_ingestion:
+    root_dir: /geekradius/used_cars_project/data_ingestion/
+    hdfs_data_file: hdfs://localhost:9000/geekradius/used_cars_project/used_cars_data.csv
+    source_URL: https://www.kaggle.com/datasets/ananaymital/us-used-cars-dataset/download?datasetVersionNumber=1
