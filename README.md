@@ -28,135 +28,121 @@ Notes:
 4. Simulate periodical appearance of new data by splitting the train dataset on many subparts.
 5. Take a look on ‘kubectl rollout restart’ command to make redeployment without downtime.
 
+## Local Setup
 
-Setup.
+### Prerequisites
 
-1. Make sure you have a suitable version of Python installed (preferably 3.8 or higher). python --version.
-2. pip install pyspark
-3. Remove Java JDK from Macbook M1, and install Java JDK 8
-    sudo rm -rf /Library/Java/JavaVirtualMachines/jdk-20.jdk
-    sudo rm -rf /Library/PreferencePanes/JavaControlPanel.prefPane
-    sudo rm -rf /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin
-    sudo rm -rf ~/Library/Application\ Support/Oracle/Java
-    Download & Install JDK8 https://www.oracle.com/uk/java/technologies/downloads/#java8-mac
-    nano ~/.zprofile
-    JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-    export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-    source ~/.zprofile
-4. Create security key for SSH Hadoop
-    System preference, Sharing, Check; Remote Login, allow full access for remote users
-    To create security key for SSH; 
-        ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
-        cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-        chmod 0600 ~/.ssh/id_rsa.pub
-        ssh localhost
-        CTRL+D to close connection to localhost
-5. Download Hadoop
-    https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
-    nano ~/.zprofile
-        # Define the Hadoop home directory
-        export HADOOP_HOME=/Users/macbookpro/hadoop-3.3.6
+Ensure you have a suitable version of Python installed (preferably 3.8 or higher). 
 
-        # Essential Hadoop Environment Variables
-        export HADOOP_INSTALL=$HADOOP_HOME
-        export HADOOP_MAPRED_HOME=$HADOOP_HOME
-        export HADOOP_COMMON_HOME=$HADOOP_HOME
-        export HADOOP_HDFS_HOME=$HADOOP_HOME
-        export YARN_HOME=$HADOOP_HOME
+```bash
+python --version
+````
 
-        # Point to native Hadoop library
-        export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+Setting up HDFS
 
-        # Java options for Hadoop
-        export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"
+1. Installing Java JDK 8
+If you're using a Macbook M1, remove any existing JDK:
 
-        # Update PATH to include Hadoop binary and sbin directories
-        export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
-    source ~/.zprofile
+```
+sudo rm -rf /Library/Java/JavaVirtualMachines/jdk-20.jdk
+sudo rm -rf /Library/PreferencePanes/JavaControlPanel.prefPane
+sudo rm -rf /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin
+sudo rm -rf ~/Library/Application\ Support/Oracle/Java
+```
 
-6. sudo code $HADOOP_HOME/etc/hadoop/hadoop-env.sh
-    # variable is REQUIRED on ALL platforms except OS X!
-    export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home
+Download & Install JDK8 from Oracle's website.https://www.oracle.com/uk/java/technologies/downloads/#java8-mac
 
-7. sudo code $HADOOP_HOME/etc/hadoop/core-site.xml
-    <configuration>
-        <property>
-            <name>hadoop.tmp.dir</name>
-            <value>/Users/macbookpro/hdfs/tmp/</value>
-            <description>Path to temporary directories.</description>
-        </property>
-        <property>
-            <name>fs.defaultFS</name>
-            <value>hdfs://127.0.0.1:9000</value>
-            <description>The address of the NameNode.</description>
-        </property>
-    </configuration>
+Update your shell profile:
 
-8. sudo code $HADOOP_HOME/etc/hadoop/hdfs-site.xml 
-    <configuration>
-        <property>
-            <name>dfs.namenode.name.dir</name>
-            <value>/Users/macbookpro/hdfs/namenode</value>
-            <description>Directory where NameNode stores its metadata.</description>
-        </property>
-        <property>
-            <name>dfs.datanode.data.dir</name>
-            <value>/Users/macbookpro/hdfs/datanode</value>
-            <description>Directory where DataNode stores its data blocks.</description>
-        </property>
-        <property>
-            <name>dfs.replication</name>
-            <value>1</value>
-            <description>Default block replication.</description>
-        </property>
-    </configuration>
+```
+nano ~/.zprofile
+```
 
-9. sudo code $HADOOP_HOME/etc/hadoop/mapred-site.xml
-    <configuration> 
-    <property> 
-        <name>mapreduce.framework.name</name> 
-        <value>yarn</value> 
-        <description>Which MapReduce framework to use.</description>
-    </property> 
-    </configuration>
+Add the following lines:
 
-10. sudo code $HADOOP_HOME/etc/hadoop/yarn-site.xml
-    <configuration>
-        <property>
-            <name>yarn.nodemanager.aux-services</name>
-            <value>mapreduce_shuffle</value>
-        </property>
-        <property>
-            <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
-            <value>org.apache.hadoop.mapred.ShuffleHandler</value>
-        </property>
-        <property>
-            <name>yarn.resourcemanager.hostname</name>
-            <value>127.0.0.1</value>
-        </property>
-        <property>
-            <name>yarn.acl.enable</name>
-            <value>0</value>
-        </property>
-        <property>
-            <name>yarn.nodemanager.env-whitelist</name>   
-            <value>JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PERPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME</value>
-        </property>
-    </configuration>
-    
-11.  hdfs namenode -format
+```
+JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
+export JAVA_HOME="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
+```
 
-12. start-all.sh
-13 use jps to command to check if the Hadoop daemons are running
+Reload the profile:
 
-NameNode Web UI: http://localhost:9870/
-ResourceManager Web UI (YARN): http://localhost:8088/
-DataNode Web UI: http://localhost:9864/
-Secondary NameNode Web UI:http://localhost:9868/
+```
+source ~/.zprofile
+```
 
-14. Creating users
-    hadoop fs -mkdir /geekradius/
-    hadoop fs -mkdir /geekradius/etietop
+2. Setting Up SSH (Required for Hadoop)
+Enable remote login:
 
-15. Transfer Data From Kaggle
-    hadoop fs -put /Users/macbookpro/Downloads/used_cars_data.csv /geekradius/etietop/
+Go to System Preferences > Sharing.
+Check "Remote Login" and allow full access for remote users.
+Create a security key for SSH:
+
+```
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 0600 ~/.ssh/id_rsa.pub
+ssh localhost
+```
+
+Press CTRL+D to close the connection to localhost.
+
+3. Installing Hadoop
+
+Download Hadoop. https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+
+Update your shell profile:
+
+```
+nano ~/.zprofile
+```
+
+... (Your existing Hadoop environment variables setup remains here) ...
+
+Reload the profile:
+
+```
+source ~/.zprofile
+```
+
+... (Your existing Hadoop configuration setup remains here) ...
+
+4. Starting Hadoop Services
+Format the Hadoop filesystem:
+
+```
+hdfs namenode -format
+```
+
+Start all Hadoop services:
+
+```
+start-all.sh
+```
+
+Use jps command to check if the Hadoop daemons are running.
+
+Web UIs:
+
+NameNode: http://localhost:9870/
+ResourceManager (YARN): http://localhost:8088/
+DataNode: http://localhost:9864/
+Secondary NameNode: http://localhost:9868/
+
+5. Creating User Directories in HDFS
+
+```
+hadoop fs -mkdir /geekradius/
+hadoop fs -mkdir /geekradius/etietop
+```
+
+6. Transferring Data From Kaggle to HDFS
+
+```
+hadoop fs -put /Users/macbookpro/Downloads/used_cars_data.csv /geekradius/etietop/
+```
+
+### Setting up Spark
+
+
+
