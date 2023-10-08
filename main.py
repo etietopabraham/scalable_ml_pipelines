@@ -7,6 +7,7 @@ and is executed sequentially.
 # Module imports
 from us_used_cars_ml_pipeline import logger
 from us_used_cars_ml_pipeline.pipelines.stage_01_data_ingestion import DataIngestionTrainingPipeline
+from us_used_cars_ml_pipeline.pipelines.stage_02_data_cleaning import DataCleaningPipeline
 
 
 def main():
@@ -16,7 +17,7 @@ def main():
     """
 
     # List of pipeline stages to be executed in sequence
-    execution_sequence = [DataIngestionTrainingPipeline(),]
+    execution_sequence = [DataIngestionTrainingPipeline(), DataCleaningPipeline()]
 
     for pipeline in execution_sequence:
         try:

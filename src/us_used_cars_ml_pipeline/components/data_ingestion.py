@@ -41,7 +41,7 @@ class DataIngestion:
         """
         try:
             df = spark.read.csv(self.config.hdfs_data_file, header=True, inferSchema=True)
-            df.show()  # Display the first few rows of the DataFrame
+            # df.show()  # Display the first few rows of the DataFrame
             return df
         except Exception as e:
             logger.error(f"Failed to read data from HDFS. Error: {e}")
